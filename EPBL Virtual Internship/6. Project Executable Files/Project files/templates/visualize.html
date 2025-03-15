@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Traffic Volume Estimation - Visualizations</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .visualization {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .visualization img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .explanation {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 5px solid #2c3e50;
+            border-radius: 5px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .nav-button {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-button:hover {
+            background-color: #3498db;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Traffic Volume Estimation - Model Insights</h1>
+    
+    <div class="visualization">
+        <h2>Feature Importance</h2>
+        {% if feature_importance_exists %}
+        <img src="{{ url_for('serve_static', filename='feature_importance.png') }}" alt="Feature Importance">
+        <div class="explanation">
+            <p>This chart shows the importance of each feature in predicting traffic volume. Features with higher importance have a greater impact on the model's predictions.</p>
+            <p>Understanding feature importance helps identify which factors most significantly affect traffic volume, allowing for better traffic management strategies.</p>
+        </div>
+        {% else %}
+        <p>Feature importance visualization is not available. Please run the train_model.py script to generate visualizations.</p>
+        {% endif %}
+    </div>
+    
+    <div class="visualization">
+        <h2>Actual vs Predicted Traffic Volume</h2>
+        {% if actual_vs_predicted_exists %}
+        <img src="{{ url_for('serve_static', filename='actual_vs_predicted.png') }}" alt="Actual vs Predicted">
+        <div class="explanation">
+            <p>This scatter plot compares the actual traffic volume values with the model's predictions. Points closer to the diagonal red line indicate more accurate predictions.</p>
+            <p>The spread of points around the line gives an indication of the model's accuracy across different traffic volume levels.</p>
+        </div>
+        {% else %}
+        <p>Actual vs Predicted visualization is not available. Please run the train_model.py script to generate visualizations.</p>
+        {% endif %}
+    </div>
+    
+    <div class="nav-buttons">
+        <a href="{{ url_for('home') }}" class="nav-button">Back to Prediction</a>
+        <a href="{{ url_for('about') }}" class="nav-button">About the Project</a>
+    </div>
+</div>
+
+</body>
+</html> 

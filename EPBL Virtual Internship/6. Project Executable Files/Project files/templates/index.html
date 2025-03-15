@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <meta charset="UTF-8">
+        <title>Traffic Volume Estimation</title>
+        <style>
+                body {
+                        font-family: 'Arial', sans-serif;
+                        background-size: cover;
+                        background-position: center;
+                        background-attachment: fixed;
+                        margin: 0;
+                        padding: 0;
+                        color: #333;
+                }
+
+                .container {
+
+                        max-width: 1080px;
+                        margin: -4px auto;
+                        padding: 12px;
+                        background-color: rgba(255, 255, 255, 0.5);
+                        border-radius: 10px;
+                        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+                }
+
+                h1 {
+                        color: #2c3e50;
+                        text-align: center;
+                        margin-bottom: 30px;
+                        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+                }
+
+                .form-group {
+                        margin-bottom: 15px;
+                        display: flex;
+                        align-items: center;
+                }
+
+                label {
+                        width: 120px;
+                        font-weight: bold;
+                        margin-right: 10px;
+                }
+
+                input,
+                select {
+                        padding: 8px;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        width: 200px;
+                        font-size: 14px;
+                }
+
+                input:focus,
+                select:focus {
+                        border-color: #3498db;
+                        outline: none;
+                        box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+                }
+
+                button {
+                        background-color: #2c3e50;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        transition: background-color 0.3s;
+                        display: block;
+                        margin: 20px auto;
+                }
+
+                button:hover {
+                        background-color: #3498db;
+                }
+
+                .prediction-result {
+                        margin-top: 20px;
+                        padding: 15px;
+                        background-color: #f8f9fa;
+                        border-left: 5px solid #2c3e50;
+                        font-weight: bold;
+                        text-align: center;
+                        font-size: 18px;
+                }
+        </style>
+</head>
+
+<body background="https://cdn.prod.website-files.com/628905bae461d31c437ea344/63d40a305c85f36ca69a8478_Congestion.webp"
+        text="black">
+
+        <div class="container">
+                <h1>Traffic Volume Estimation</h1>
+
+                <!-- Main Input For Receiving Query to our ML -->
+                <form action="{{ url_for('predict')}}" method="post">
+                        <h2>Please enter the following details:</h2>
+
+                        <div class="form-group">
+                                <label for="holiday">Holiday:</label>
+                                <select id="holiday" name="holiday">
+                                        <option value="0">None</option>
+                                        <option value="1">Columbus Day</option>
+                                        <option value="10">Veterans Day</option>
+                                        <option value="9">Thanksgiving Day</option>
+                                        <option value="6">Christmas Day</option>
+                                        <option value="5">New Years Day</option>
+                                        <option value="11">Washingtons Birthday</option>
+                                        <option value="5">Memorial Day</option>
+                                        <option value="2">Independence Day</option>
+                                        <option value="8">State Fair</option>
+                                        <option value="3">Labor Day</option>
+                                        <option value="4">Martin Luther King Jr Day</option>
+                                </select>
+                        </div>
+
+                        <div class="form-group">
+                                <label for="temp">Temperature:</label>
+                                <input type="number" id="temp" name="temp" placeholder="Temperature"
+                                        required="required" />
+                        </div>
+
+                        <div class="form-group">
+                                <label for="rain">Rain:</label>
+                                <input type="number" id="rain" min="0" max="1" name="rain" placeholder="0 or 1"
+                                        required="required" />
+                        </div>
+
+                        <div class="form-group">
+                                <label for="snow">Snow:</label>
+                                <input type="number" id="snow" min="0" max="1" name="snow" placeholder="0 or 1"
+                                        required="required" />
+                        </div>
+
+                        <div class="form-group">
+                                <label for="weather">Weather:</label>
+                                <select id="weather" name="weather">
+                                        <option value="1">Clouds</option>
+                                        <option value="0">Clear</option>
+                                        <option value="4">Rain</option>
+                                        <option value="3">Drizzle</option>
+                                        <option value="5">Mist</option>
+                                        <option value="6">Haze</option>
+                                        <option value="2">Fog</option>
+                                        <option value="10">Thunderstorm</option>
+                                        <option value="8">Snow</option>
+                                        <option value="9">Squall</option>
+                                        <option value="7">Smoke</option>
+                                </select>
+                        </div>
+
+                        <div class="form-group">
+                                <label for="year">Year:</label>
+                                <input type="number" id="year" min="2012" max="2022" name="year" placeholder="YYYY"
+                                        required="required" />
+                        </div>
+
+                        <div class="form-group">
+                                <label for="month">Month:</label>
+                                <input type="number" id="month" min="1" max="12" name="month" placeholder="1-12"
+                                        required="required" />
+                        </div>
+
+                        <div class="form-group">
+                                <label for="day">Day:</label>
+                                <input type="number" id="day" min="1" max="31" name="day" placeholder="1-31"
+                                        required="required" />
+                        </div>
+
+                        <div class="form-group">
+                                <label for="hours">Hours:</label>
+                                <input type="number" id="hours" min="0" max="24" name="hours" placeholder="0-24"
+                                        required="required" />
+                        </div>
+
+                        <div class="form-group">
+                                <label for="minutes">Minutes:</label>
+                                <input type="number" id="minutes" min="0" max="60" name="minutes" placeholder="0-60"
+                                        required="required" />
+                        </div>
+
+                        <div class="form-group">
+                                <label for="seconds">Seconds:</label>
+                                <input type="number" id="seconds" min="0" max="60" name="seconds" placeholder="0-60"
+                                        required="required" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+                </form>
+
+                {% if prediction_text %}
+                <div class="prediction-result">
+                        {{ prediction_text }}
+                </div>
+                {% endif %}
+        </div>
+
+</body>
+
+</html>
